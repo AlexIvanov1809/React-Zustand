@@ -1,0 +1,11 @@
+$primary-color: #3f72af;
+$secondary-color: #dbe2ef;
+$font: 16px/1.4 "Roboto", sans-serif;
+
+@function btn-background($color, $url) {
+	@return $color url($url) no-repeat center center;
+}
+
+@mixin hover {
+	opacity: 0.7;
+}

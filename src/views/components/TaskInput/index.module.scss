@@ -1,0 +1,38 @@
+.taskInput {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 45px;
+	margin-bottom: 1rem;
+
+	&Title {
+		border: 1px solid #b1b1b1;
+		border-right: none;
+		border-top-left-radius: 5px;
+		border-bottom-left-radius: 5px;
+		padding: 9px 10px;
+		font: $font;
+		background-color: $secondary-color;
+
+		&:focus {
+			outline: none;
+		}
+
+		&::placeholder {
+			color: #7b7b7b;
+		}
+	}
+
+	&Btn {
+		border-radius: none;
+		border-top-right-radius: 5px;
+		border-bottom-right-radius: 5px;
+		border: none;
+		cursor: pointer;
+		background: btn-background($primary-color, "./images/plus.svg");
+		transition: opacity 0.3s;
+
+		&:hover {
+			@include hover;
+		}
+	}
+}
