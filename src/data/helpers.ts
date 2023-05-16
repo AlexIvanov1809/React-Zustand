@@ -3,10 +3,25 @@ import { Task, ToDoStore } from './store/useToDoStore';
 
 type GenerateId = () => string;
 
+interface FetchTask {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
 const TASK_STORAGE_NAME = 'tasks';
 
 const generateId: GenerateId = () =>
   Math.random().toString(16).slice(2) + new Date().getTime().toString(36);
+
+const normalizeFetchingData = (data: FetchTask[]): Task[] => {
+  return data.map((todo) => ({
+    id: generateId(),
+    title: todo.title,
+    createdAt: Date.now(),
+  }));
+};
 
 const isToDoStore = (object: any): object is ToDoStore => {
   return TASK_STORAGE_NAME in object;
@@ -40,4 +55,4 @@ const getCurrentState = (): Task[] => {
   return [];
 };
 
-export { generateId, localStorageData, getCurrentState };
+export { generateId, localStorageData, getCurrentState, normalizeFetchingData };

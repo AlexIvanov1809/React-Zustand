@@ -1,6 +1,11 @@
 import { create, StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { generateId, getCurrentState, localStorageData } from '../helpers';
+import {
+  generateId,
+  getCurrentState,
+  localStorageData,
+  normalizeFetchingData,
+} from '../helpers';
 
 export interface Task {
   id: string;
@@ -13,6 +18,7 @@ export interface ToDoStore {
   createTask: (title: string) => void;
   updateTask: (id: string, title: string) => void;
   removeTask: (id: string) => void;
+  fetchTasks: () => void;
 }
 
 const middleware = (store: StateCreator<ToDoStore>) =>
@@ -21,6 +27,17 @@ const middleware = (store: StateCreator<ToDoStore>) =>
 const useToDoStore = create<ToDoStore, [['zustand/devtools', never]]>(
   middleware((set, get) => ({
     tasks: getCurrentState(),
+
+    fetchTasks: async () => {
+      const { tasks } = get();
+      const response = await fetch(
+        'https://jsonplaceholder.typicode.com/todos?_limit=10',
+      );
+      const fetchTasks = await response.json();
+      const preparedTasks = normalizeFetchingData(fetchTasks);
+      set({ tasks: tasks.concat(preparedTasks) });
+    },
+
     createTask: (title) => {
       const { tasks } = get();
       const newTask: Task = {
@@ -33,6 +50,7 @@ const useToDoStore = create<ToDoStore, [['zustand/devtools', never]]>(
         tasks: [newTask].concat(tasks),
       });
     },
+
     updateTask: (id, title) => {
       const { tasks } = get();
       set({
@@ -42,6 +60,7 @@ const useToDoStore = create<ToDoStore, [['zustand/devtools', never]]>(
         })),
       });
     },
+
     removeTask: (id) => {
       const { tasks } = get();
       set({
